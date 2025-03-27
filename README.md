@@ -47,6 +47,7 @@ print(library.return_book(1, 101, 1002, date.today()))  # Alice returns the book
 ```
 
 ## 🏗 Future Enhancements
+- 🔹 Automate Transaction ID Generation for each transaction
 - 🔹 Implement a **GUI/Web Interface**
 - 🔹 Integrate a **Database** for persistent storage
 - 🔹 Implement **REST APIs** for better scalability
