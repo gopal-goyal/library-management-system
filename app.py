@@ -1,7 +1,6 @@
 from services.library import LibrarySystem
 from datetime import datetime
 
-current_time = datetime.now().strftime("%I:%M %p")
 
 if __name__ == "__main__":
     
@@ -22,14 +21,14 @@ if __name__ == "__main__":
     print(library.delete_book(103))
     
     # Borrow and Return Books
-    print(library.borrow_book(1, 101, 1001, current_time))  # Piyush borrows your first year in Code
-    print(library.borrow_book(2, 102, 1002, current_time))  # Saloni borrows Concepts of Physics
-    print(library.borrow_book(1, 103, 1003, current_time))  # Book not in Database
-    print(library.borrow_book(2, 101, 1004, current_time))  # Book not available
-    print(library.return_book(2, 102, 1005, current_time))  # Saloni returns Concepts of Physics
-    print(library.borrow_book(1, 102, 1006, current_time))  # Piyush borrows Concepts of Physics
-    print(library.return_book(1, 101, 1007, current_time))  # Piyush returns your first year in Code
-    print(library.return_book(1, 102, 1008, current_time))  # Piyush returns Concepts of Physics
+    print(library.borrow_book(2, 102))  # Saloni borrows Concepts of Physics
+    print(library.borrow_book(1, 101))  # Piyush borrows your first year in Code
+    print(library.borrow_book(1, 103))  # Book not in Database
+    print(library.borrow_book(2, 101))  # Book not available
+    print(library.return_book(2, 102))  # Saloni returns Concepts of Physics
+    print(library.borrow_book(1, 102))  # Piyush borrows Concepts of Physics
+    print(library.return_book(1, 101))  # Piyush returns your first year in Code
+    print(library.return_book(1, 102))  # Piyush returns Concepts of Physics
     
     # Display Transactions
     print("\nTransaction History:")

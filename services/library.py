@@ -3,6 +3,7 @@ from models.users import User
 from models.book import Book
 from models.transaction import Transaction
 import os
+from datetime import datetime
 
 # Define the base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,6 +22,9 @@ class LibrarySystem:
         self.load_users()
         self.load_books()
         self.load_transactions()
+        self.transaction_counter = 1000
+        if self.transactions:
+            self.transaction_counter = max(t.transaction_id for t in self.transactions) + 1
 
     # USER LEVEL OPERATIONS
     def load_users(self):
@@ -114,7 +118,7 @@ class LibrarySystem:
             for book in self.books.values():
                 writer.writerow([book.book_id, book.title, book.author, "Yes" if book.is_available else "No"])
 
-    def borrow_book(self, user_id, book_id, transaction_id, date):
+    def borrow_book(self, user_id, book_id):
         """ Allow a user to borrow a book if available """
         if user_id not in self.users:
             return "User not found."
@@ -130,6 +134,13 @@ class LibrarySystem:
         if not book.is_available:
             return f"Book '{book.title}' is currently unavailable."
 
+        # Generate new transaction ID
+        transaction_id = self.transaction_counter
+        self.transaction_counter += 1
+
+        # Get the current timestamp
+        date = datetime.now().strftime("%I:%M %p")
+
         # Update book status and user's borrowed books
         book.is_available = False
         user.borrowed_books.append(book_id)
@@ -143,9 +154,9 @@ class LibrarySystem:
         self.transactions.append(transaction)
         self.save_transaction()
 
-        return f"{user.name} borrowed '{book.title}' successfully."
+        return f"Transaction {transaction_id}: {user.name} borrowed '{book.title}' successfully."
     
-    def return_book(self, user_id, book_id, transaction_id, return_date):
+    def return_book(self, user_id, book_id):
         """ Allow a user to return a borrowed book """
         if user_id not in self.users:
             return "User not found."
@@ -159,6 +170,13 @@ class LibrarySystem:
         if book_id not in user.borrowed_books:
             return f"{user.name} has not borrowed '{book.title}'."
 
+        # Generate new transaction ID
+        transaction_id = self.transaction_counter
+        self.transaction_counter += 1
+
+         # Get the current timestamp
+        date = datetime.now().strftime("%I:%M %p")
+
         # Update book status and remove from user's borrowed books list
         book.is_available = True
         user.borrowed_books.remove(book_id)
@@ -168,11 +186,11 @@ class LibrarySystem:
         self.save_users()
 
         # Log the transaction
-        transaction = Transaction(transaction_id, user_id, book_id, "Returned", return_date)
+        transaction = Transaction(transaction_id, user_id, book_id, "Returned", date)
         self.transactions.append(transaction)
         self.save_transaction()
 
-        return f"{user.name} returned '{book.title}' successfully."
+        return f"Transaction {transaction_id}: {user.name} returned '{book.title}' successfully."
 
     # TRANSACTION LEVEL OPERATIONS
     def load_transactions(self):
